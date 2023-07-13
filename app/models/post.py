@@ -1,6 +1,5 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 import datetime
-from .user import User
 
 class Post(db.Model):
     __tablename__ = 'posts'
