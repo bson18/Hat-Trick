@@ -1,17 +1,17 @@
 from flask import Blueprint, request
 from flask_login import current_user
 from app.models import db, Post, PostImage
-from app.forms import PostForm
+from app.forms import PostForm, PostImageForm
 from sqlalchemy import func
 from .AWS_helper import upload_file_to_s3, remove_file_from_s3, get_unique_filename
 
 post_routes = Blueprint('posts', __name__)
 
 #Get all posts
-@post_routes.route('/', methods = ['GET'])
+@post_routes.route('', methods = ['GET'])
 def get_all_posts():
     posts = Post.query.all()
-    return [post.to_dict() for post in posts]
+    return {"all_posts": {post.id: post.to_dict() for post in posts}}
 
 
 #Get single post
@@ -30,7 +30,9 @@ def create_post():
     form = PostForm()
     form['csrf_token'].data = request.cookies['csrf_token']
 
-    if form.validate_on_submit():
+    image_form = PostImageForm()
+
+    if form.validate_on_submit() and image_form.validate_on_submit():
         post = Post(
             owner_id = current_user.id,
             title = form.data['title'],

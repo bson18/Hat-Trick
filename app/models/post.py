@@ -27,5 +27,7 @@ class Post(db.Model):
             'heading': self.heading,
             'post': self.post,
             'created_at': self.created_at,
-            'updated_at': self.updated_at
+            'updated_at': self.updated_at,
+            "owner_first_name": self.owner.first_name,
+            "owner_last_name": self.owner.last_name
         }

@@ -15,28 +15,35 @@ export const actionGetAllPosts = (posts) => {
 //Get all posts
 export const thunkGetAllPosts = () => async dispatch => {
     const res = await fetch('/api/posts')
+    const data = await res.json()
 
-    if (res.ok) {
-        const data = await res.json()
-        dispatch(actionGetAllPosts(data['Posts']))
-        return data
-    }
+    const normalizedData = {}
+    Object.values(data.all_posts).forEach(post => {
+        normalizedData[post.id] = post
+    })
+
+    dispatch(actionGetAllPosts(normalizedData))
+    return data
 }
 
 
 /*-----REDUCER-----*/
 const initialState = {
-    allPosts: null,
+    allPosts: {},
     singlePost: {}
 }
 
 export default function postsReducer(state = initialState, action) {
-    let newState
+    // let newState
     switch (action.type) {
         case GET_ALL_POSTS: {
-            newState = { allPosts: {}, ...state.singlePost }
-            newState.allPosts = action.posts
-            return newState
+            return {
+                ...state,
+                allPosts: action.posts,
+            };
         }
+
+        default:
+            return state
     }
 }

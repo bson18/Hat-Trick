@@ -19,3 +19,5 @@ const PostTile = ({ post }) => {
         </div>
     )
 }
+
+export default PostTile
