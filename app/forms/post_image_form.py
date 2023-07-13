@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField
-from wtforms.validators import DataRequired
+from flask_wtf.file import FileField, FileAllowed, FileRequired
+from app.api.AWS_helper import ALLOWED_EXTENSIONS
 
 class PostImageForm(FlaskForm):
-    url = StringField('url', validators=[DataRequired()])
+    image = FileField('image', validators=[FileRequired(), FileAllowed(list(ALLOWED_EXTENSIONS))])

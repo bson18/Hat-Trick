@@ -1,8 +1,9 @@
 from flask import Blueprint, request
 from flask_login import current_user
-from app.models import db, Post
+from app.models import db, Post, PostImage
 from app.forms import PostForm
 from sqlalchemy import func
+from .AWS_helper import upload_file_to_s3, remove_file_from_s3, get_unique_filename
 
 post_routes = Blueprint('posts', __name__)
 
@@ -37,11 +38,34 @@ def create_post():
             post = form.data['post'],
             createdAt = func.now()
         )
-
         db.session.add(post)
+
+        if 'images' in request.files:
+            images = request.files.getlist('images')
+            for image in images:
+                if image:
+                    try:
+                        filename = get_unique_filename(image.filename)
+                        res = upload_file_to_s3(image, filename)
+
+                        if 'url' in res:
+                            image_url = res['url']
+
+                            post_image = PostImage(
+                                post_id=post.id,
+                                image=image_url,
+                                created_at=func.now(),
+                                updated_at = func.now()
+                            )
+                            db.session.add(post_image)
+                        else:
+                            return {"message": "Failed to upload image"}, 500
+                    except Exception as e:
+                        return {"message": str(e)}, 500
+
         db.session.commit()
 
-        return post.to_dict()
+        return {"post": post.to_dict(), "post_image": post_image.to_dict()}
     return {"message": "Bad Request"}, 400
 
 

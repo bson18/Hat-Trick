@@ -16,6 +16,11 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
 
+    #relationships
+    posts = db.relationship('Post', backref='owner')
+    comments = db.relationship('Comment', backref='user')
+
+
     @property
     def password(self):
         return self.hashed_password

@@ -1,4 +1,5 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
+import datetime
 
 class Comment(db.Model):
     __tablename__ = 'comments'
@@ -7,11 +8,11 @@ class Comment(db.Model):
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     comment = db.Column(db.Text, nullable=False)
-    post_id = db.Column(db.Integer, nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False)
-    updated_at = db.Column(db.DateTime, nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.today, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.today, nullable=False)
 
 
 
