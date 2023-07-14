@@ -31,16 +31,20 @@ def create_post():
     form['csrf_token'].data = request.cookies['csrf_token']
 
     image_form = PostImageForm()
+    image_form['csrf_token'].data = request.cookies['csrf_token']
 
     if form.validate_on_submit() and image_form.validate_on_submit():
+        print("Form validation successful")
         post = Post(
             owner_id = current_user.id,
             title = form.data['title'],
             heading = form.data['heading'],
             post = form.data['post'],
-            createdAt = func.now()
+            created_at = func.now()
         )
+        # print(post)
         db.session.add(post)
+        db.session.commit()
 
         if 'images' in request.files:
             images = request.files.getlist('images')
@@ -68,6 +72,13 @@ def create_post():
         db.session.commit()
 
         return {"post": post.to_dict(), "post_image": post_image.to_dict()}
+    else:
+        print("Form validation failed")
+        form_errors = form.errors
+        image_form_errors = image_form.errors
+
+        print("Form errors: ", form_errors)
+        print("Image form errors: ", image_form_errors)
     return {"message": "Bad Request"}, 400
 
 
