@@ -17,8 +17,8 @@ class User(db.Model, UserMixin):
     last_name = db.Column(db.String(50), nullable=False)
 
     #relationships
-    posts = db.relationship('Post', backref='owner')
-    comments = db.relationship('Comment', backref='user')
+    posts = db.relationship('Post', backref='owner', cascade='all, delete-orphan')
+    comments = db.relationship('Comment', backref='user', cascade='all, delete-orphan')
 
 
     @property
