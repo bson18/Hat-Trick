@@ -46,7 +46,9 @@ def create_post():
         db.session.add(post)
         db.session.commit()
 
-        if 'images' in request.files:
+        post_image = None
+
+        if 'image' in request.files:
             images = request.files.getlist('images')
             for image in images:
                 if image:
@@ -71,7 +73,10 @@ def create_post():
 
         db.session.commit()
 
-        return {"post": post.to_dict(), "post_image": post_image.to_dict()}
+        if post_image is not None:
+            return {"post": post.to_dict(), "post_image": post_image.to_dict()}
+        else:
+            return {"post": post.to_dict()}
     else:
         print("Form validation failed")
         form_errors = form.errors
@@ -112,7 +117,7 @@ def update_post(id):
 
 
 #Delete post
-@post_routes.route('/<int:id>', methods = ['POST'])
+@post_routes.route('/<int:id>', methods = ['DELETE'])
 def delete_post(id):
     if not current_user.is_authenticated:
         return {"message": "Authentication required"}, 401

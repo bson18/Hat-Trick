@@ -6,6 +6,8 @@ import LoginFormPage from "./components/LoginFormPage";
 import { authenticate } from "./store/session";
 import Navigation from "./components/Navigation";
 import PostTiles from "./components/Posts/PostTiles"
+import CreatePost from "./components/Posts/CreatePost";
+import PostDetails from "./components/Posts/PostDetails";
 
 function App() {
   const dispatch = useDispatch();
@@ -19,14 +21,20 @@ function App() {
       <Navigation isLoaded={isLoaded} />
       {isLoaded && (
         <Switch>
-          <Route path='/'>
+          <Route exact path='/'>
             <PostTiles />
+          </Route>
+          <Route path='/new'>
+            <CreatePost />
           </Route>
           <Route path="/login" >
             <LoginFormPage />
           </Route>
           <Route path="/signup">
             <SignupFormPage />
+          </Route>
+          <Route exact path='/:postId'>
+            <PostDetails />
           </Route>
         </Switch>
       )}
