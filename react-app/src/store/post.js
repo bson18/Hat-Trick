@@ -1,4 +1,8 @@
 const GET_ALL_POSTS = 'posts/GET_ALL_POSTS'
+const GET_SINGLE_POST = 'posts/GET_SINGLE_POST'
+const CREATE_POST = 'posts/CREATE_POST'
+const UPDATE_POST = 'posts/UPDATE_POST'
+const DELETE_POST = 'posts/DELETE_POST'
 
 /*-----ACTIONS-----*/
 
@@ -7,6 +11,38 @@ export const actionGetAllPosts = (posts) => {
     return {
         type: GET_ALL_POSTS,
         posts
+    }
+}
+
+//Get single post
+export const actionGetSinglePost = post => {
+    return {
+        type: GET_SINGLE_POST,
+        post
+    }
+}
+
+//Create post
+export const actionCreatePost = post => {
+    return {
+        type: CREATE_POST,
+        post
+    }
+}
+
+//Update post
+export const actionUpdatePost = post => {
+    return {
+        type: UPDATE_POST,
+        post
+    }
+}
+
+//Delete post
+export const actionDeletePost = post => {
+    return {
+        type: DELETE_POST,
+        post
     }
 }
 
@@ -26,6 +62,31 @@ export const thunkGetAllPosts = () => async dispatch => {
     return data
 }
 
+//Get single post
+export const thunkGetSinglePost = postId => async dispatch => {
+    const res = await fetch(`/api/posts/${postId}`)
+    const post = await res.json()
+    if (res.ok) {
+        dispatch(actionGetSinglePost(post))
+        return post
+    }
+}
+
+
+
+//Delete post
+export const thunkDeletePost = postId => async dispatch => {
+    const res = await fetch(`/api/posts/${postId}`, {
+        method: 'DELETE'
+    })
+    const data = await res.json()
+    if (res.ok) {
+        dispatch(actionDeletePost(postId))
+        dispatch(thunkGetAllPosts())
+    }
+    return data
+}
+
 
 /*-----REDUCER-----*/
 const initialState = {
@@ -34,7 +95,7 @@ const initialState = {
 }
 
 export default function postsReducer(state = initialState, action) {
-    // let newState
+    let newState
     switch (action.type) {
         case GET_ALL_POSTS: {
             return {
@@ -42,7 +103,18 @@ export default function postsReducer(state = initialState, action) {
                 allPosts: action.posts,
             };
         }
+        case GET_SINGLE_POST: {
+            newState = { ...state.allPosts, singlePost: {} }
+            newState.singlePost = action.post
+            return newState
+        }
 
+
+        case DELETE_POST: {
+            newState = { ...state, allPosts: { ...state.allPosts } }
+            delete newState.allPosts[action.postId]
+            return newState
+        }
         default:
             return state
     }

@@ -31,18 +31,24 @@ def create_post():
     form['csrf_token'].data = request.cookies['csrf_token']
 
     image_form = PostImageForm()
+    image_form['csrf_token'].data = request.cookies['csrf_token']
 
     if form.validate_on_submit() and image_form.validate_on_submit():
+        print("Form validation successful")
         post = Post(
             owner_id = current_user.id,
             title = form.data['title'],
             heading = form.data['heading'],
             post = form.data['post'],
-            createdAt = func.now()
+            created_at = func.now()
         )
+        # print(post)
         db.session.add(post)
+        db.session.commit()
 
-        if 'images' in request.files:
+        post_image = None
+
+        if 'image' in request.files:
             images = request.files.getlist('images')
             for image in images:
                 if image:
@@ -67,7 +73,17 @@ def create_post():
 
         db.session.commit()
 
-        return {"post": post.to_dict(), "post_image": post_image.to_dict()}
+        if post_image is not None:
+            return {"post": post.to_dict(), "post_image": post_image.to_dict()}
+        else:
+            return {"post": post.to_dict()}
+    else:
+        print("Form validation failed")
+        form_errors = form.errors
+        image_form_errors = image_form.errors
+
+        print("Form errors: ", form_errors)
+        print("Image form errors: ", image_form_errors)
     return {"message": "Bad Request"}, 400
 
 
@@ -101,7 +117,7 @@ def update_post(id):
 
 
 #Delete post
-@post_routes.route('/<int:id>', methods = ['POST'])
+@post_routes.route('/<int:id>', methods = ['DELETE'])
 def delete_post(id):
     if not current_user.is_authenticated:
         return {"message": "Authentication required"}, 401

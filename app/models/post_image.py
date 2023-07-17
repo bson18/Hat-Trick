@@ -9,7 +9,7 @@ class PostImage(db.Model):
 
     #columns
     id = db.Column(db.Integer, primary_key=True)
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('posts.id')), nullable=False)
     image = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.today, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.today, nullable=False)
