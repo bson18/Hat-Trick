@@ -46,7 +46,9 @@ def create_post():
         db.session.add(post)
         db.session.commit()
 
-        if 'images' in request.files:
+        post_image = None
+
+        if 'image' in request.files:
             images = request.files.getlist('images')
             for image in images:
                 if image:
@@ -71,7 +73,10 @@ def create_post():
 
         db.session.commit()
 
-        return {"post": post.to_dict(), "post_image": post_image.to_dict()}
+        if post_image is not None:
+            return {"post": post.to_dict(), "post_image": post_image.to_dict()}
+        else:
+            return {"post": post.to_dict()}
     else:
         print("Form validation failed")
         form_errors = form.errors
