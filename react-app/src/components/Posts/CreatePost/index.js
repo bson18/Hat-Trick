@@ -62,10 +62,12 @@ const CreatePost = () => {
             formData.append(`section_${index + 1}_image`, section.image)
         })
         formData.append('num_sections', sections.length)
-        console.log('formdata in react', formData)
+        for (const pair of formData.entries()) {
+            console.log(`${pair[0]}, ${pair[1]}`);
+        }
         let post = await dispatch(thunkCreatePost(formData))
 
-        if (post && post.id) {
+        if (post) {
             history.push(`/${post.id}`)
         }
 

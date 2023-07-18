@@ -31,11 +31,7 @@ def create_post():
     form = PostForm(request.form)
     form['csrf_token'].data = request.cookies['csrf_token']
 
-    section_forms = [SectionForm(formdata=request.form, prefix=f'section_{i}') for i in range(int(request.form.get('num_sections', 0)))]
-    for section_form in section_forms:
-        section_form['csrf_token'].data = request.cookies['csrf_token']
-
-    if form.validate() and all(form.validate() for form in section_forms):
+    if form.validate():
         print("Form validation successful")
         post = Post(
             owner_id = current_user.id,
@@ -46,19 +42,24 @@ def create_post():
         db.session.add(post)
         db.session.flush()
 
-        for i, form in enumerate(section_forms):
-            image = form.image.data
-            if image:
+        num_sections = int(request.form.get('num_sections', 0))
+
+        for i in range(1, num_sections + 1):
+            section_heading = request.form.get(f'section_{i}_section_heading')
+            section_content = request.form.get(f'section_{i}_section')
+            image = request.files.get(f'section_{i}_image')
+            if section_heading and section_content and image:
                 try:
                     image.filename = get_unique_filename(image.filename)
                     upload = upload_file_to_s3(image)
+                    image_url = upload['url']
 
                     section = Section(
                         post_id = post.id,
-                        section_heading = form.data[f'section_{i + 1}_section_heading'],
-                        section = form.data[f'section_{i + 1}_section'],
-                        image = upload['url'],
-                        order=i + 1
+                        section_heading = section_heading,
+                        section = section_content,
+                        image = image_url,
+                        order=i
                     )
                     db.session.add(section)
                 except Exception as e:
@@ -68,11 +69,9 @@ def create_post():
     else:
         print("Form validation failed")
         form_errors = form.errors
-        section_form_errors = [form.errors for form in section_forms]
 
         print("Form errors: ", form_errors)
-        print("Section form errors: ", section_form_errors)
-    return {"message": "Bad Request", "form_errors": form_errors, "section_form_errors": section_form_errors}, 400
+    return {"message": "Bad Request", "form_errors": form_errors}, 400
 
 
 #Update post
