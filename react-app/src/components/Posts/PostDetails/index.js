@@ -32,8 +32,13 @@ const PostDetails = () => {
                     modalComponent={<DeletePostModal postId={post.id} />}
                     buttonText='Delete Article'
                 />)}
-                <p>{post.heading}</p>
-                <p>{post.post}</p>
+                <div>{post.sections.map(section => (
+                    <div key={section.id}>
+                        <img src={section.image} alt='' />
+                        <p>{section.section_heading}</p>
+                        <p>{section.section}</p>
+                    </div>
+                ))}</div>
             </div>
         </div>
     )

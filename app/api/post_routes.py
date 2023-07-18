@@ -1,9 +1,10 @@
 from flask import Blueprint, request
-from flask_login import current_user
-from app.models import db, Post, PostImage
-from app.forms import PostForm, PostImageForm
+from flask_login import current_user, login_required
+from app.models import db, Post, Section, Comment
+from app.forms import PostForm, SectionForm, CommentForm
 from sqlalchemy import func
 from .AWS_helper import upload_file_to_s3, remove_file_from_s3, get_unique_filename
+import json
 
 post_routes = Blueprint('posts', __name__)
 
@@ -27,64 +28,51 @@ def create_post():
     if not current_user.is_authenticated:
         return {"message": "Authentication required"}, 401
 
-    form = PostForm()
+    form = PostForm(request.form)
     form['csrf_token'].data = request.cookies['csrf_token']
 
-    image_form = PostImageForm()
-    image_form['csrf_token'].data = request.cookies['csrf_token']
+    section_forms = [SectionForm(formdata=request.form, prefix=f'section_{i}') for i in range(int(request.form.get('num_sections', 0)))]
+    for section_form in section_forms:
+        section_form['csrf_token'].data = request.cookies['csrf_token']
 
-    if form.validate_on_submit() and image_form.validate_on_submit():
+    if form.validate() and all(form.validate() for form in section_forms):
         print("Form validation successful")
         post = Post(
             owner_id = current_user.id,
             title = form.data['title'],
-            heading = form.data['heading'],
-            post = form.data['post'],
             created_at = func.now()
         )
         # print(post)
         db.session.add(post)
+        db.session.flush()
+
+        for i, form in enumerate(section_forms):
+            image = form.image.data
+            if image:
+                try:
+                    image.filename = get_unique_filename(image.filename)
+                    upload = upload_file_to_s3(image)
+
+                    section = Section(
+                        post_id = post.id,
+                        section_heading = form.data[f'section_{i + 1}_section_heading'],
+                        section = form.data[f'section_{i + 1}_section'],
+                        image = upload['url'],
+                        order=i + 1
+                    )
+                    db.session.add(section)
+                except Exception as e:
+                    return {"message": str(e)}, 500
         db.session.commit()
-
-        post_image = None
-
-        if 'image' in request.files:
-            images = request.files.getlist('images')
-            for image in images:
-                if image:
-                    try:
-                        filename = get_unique_filename(image.filename)
-                        res = upload_file_to_s3(image, filename)
-
-                        if 'url' in res:
-                            image_url = res['url']
-
-                            post_image = PostImage(
-                                post_id=post.id,
-                                image=image_url,
-                                created_at=func.now(),
-                                updated_at = func.now()
-                            )
-                            db.session.add(post_image)
-                        else:
-                            return {"message": "Failed to upload image"}, 500
-                    except Exception as e:
-                        return {"message": str(e)}, 500
-
-        db.session.commit()
-
-        if post_image is not None:
-            return {"post": post.to_dict(), "post_image": post_image.to_dict()}
-        else:
-            return {"post": post.to_dict()}
+        return {"post": post.to_dict()}
     else:
         print("Form validation failed")
         form_errors = form.errors
-        image_form_errors = image_form.errors
+        section_form_errors = [form.errors for form in section_forms]
 
         print("Form errors: ", form_errors)
-        print("Image form errors: ", image_form_errors)
-    return {"message": "Bad Request"}, 400
+        print("Section form errors: ", section_form_errors)
+    return {"message": "Bad Request", "form_errors": form_errors, "section_form_errors": section_form_errors}, 400
 
 
 #Update post
@@ -134,3 +122,41 @@ def delete_post(id):
     db.session.commit()
 
     return {"message": "Successfully deleted"}
+
+
+#Get all comments by post id
+@post_routes.route('/<int:id>/comments', methods = ['GET'])
+def get_all_comments(id):
+    post = Post.query.get(id)
+    comments = Comment.query.filter_by(post_id=id).all()
+    return [comment.to_dict() for comment in comments]
+
+
+#Create comment
+@post_routes.route('/<int:id>/comments', methods = ['POST'])
+@login_required
+def create_comment(id):
+    if not current_user.is_authenticated:
+        return {"message": "Authentication required"}, 401
+
+    post = Post.query.get(id)
+    if not post:
+        return {"message": "Post not found"}, 404
+
+    form = CommentForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+    data = form.data
+
+    if form.validate_on_submit():
+        comment = Comment(
+            user_id=current_user.id,
+            comment=data['comment'],
+            post_id=id,
+            created_at=func.now()
+        )
+
+        db.session.add(comment)
+        db.session.commit()
+
+        return comment.to_dict()
+    return {"message": "Bad Request", "form_errors": form.errors}, 400

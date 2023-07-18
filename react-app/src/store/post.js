@@ -72,7 +72,21 @@ export const thunkGetSinglePost = postId => async dispatch => {
     }
 }
 
+//Create post
+export const thunkCreatePost = post => async dispatch => {
+    const res = await fetch('/api/posts/new', {
+        method: "POST",
+        body: post
+    })
 
+    if (res.ok) {
+        const { resPost } = await res.json()
+        console.log("data", resPost)
+        dispatch(actionCreatePost(resPost))
+        dispatch(actionGetAllPosts())
+        return resPost
+    }
+}
 
 //Delete post
 export const thunkDeletePost = postId => async dispatch => {
@@ -108,8 +122,11 @@ export default function postsReducer(state = initialState, action) {
             newState.singlePost = action.post
             return newState
         }
-
-
+        case CREATE_POST: {
+            newState = { ...state, allPosts: { ...state.allPosts } }
+            newState.allPosts[action.post.id] = action.post
+            return newState
+        }
         case DELETE_POST: {
             newState = { ...state, allPosts: { ...state.allPosts } }
             delete newState.allPosts[action.postId]

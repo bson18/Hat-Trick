@@ -1,42 +1,135 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useDispatch } from "react-redux"
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min"
+import { thunkCreatePost } from "../../../store/post"
 
 const CreatePost = () => {
     const dispatch = useDispatch()
     const history = useHistory()
 
-    const [section1, setSection1] = useState('')
-    const [section2, setSection2] = useState('')
-    const [section3, setSection3] = useState('')
-    const [section4, setSection4] = useState('')
-    const [section5, setSection5] = useState('')
-    const [img1, setImg1] = useState('')
-    const [img2, setImg2] = useState('')
-    const [img3, setImg3] = useState('')
-    const [img4, setImg4] = useState('')
-    const [img5, setImg5] = useState('')
+    const [sections, setSections] = useState([])
     const [validationErrors, setValidationErrors] = useState({})
+    const [isLoading, setIsLoading] = useState(false)
+
+    const formRef = useRef(null)
+
+    const handleSectionChange = (index, field, value) => {
+        const updatedSections = [...sections]
+        updatedSections[index][field] = value
+        setSections(updatedSections)
+    }
+
+    const handleImageChange = (index, value) => {
+        const updatedSections = [...sections]
+        updatedSections[index].image = value
+        setSections(updatedSections)
+    }
+
+    const handleAddSection = () => {
+        setSections([...sections, { section_heading: '', section: '', image: '', order: '' }])
+    }
+
+    const handleRemoveSection = (index) => {
+        const updatedSections = [...sections]
+        updatedSections.splice(index, 1)
+        setSections(updatedSections)
+    }
 
     const validation = () => {
         const errors = {}
 
-        if (section1 && !img1) errors.section1 = 'Must have an image for this section'
-        if (section2 && !img2) errors.section2 = 'Must have an image for this section'
-        if (section3 && !img3) errors.section3 = 'Must have an image for this section'
-        if (section4 && !img4) errors.section4 = 'Must have an image for this section'
-        if (section5 && !img5) errors.section5 = 'Must have an image for this section'
+        sections.forEach((section, index) => {
+            if (section.section && !section.image) {
+                errors[`section${index + 1}`] = 'Must have an image for this section'
+            }
+        })
         setValidationErrors(errors)
         return Object.keys(errors).length === 0
     }
 
+    const handleSubmit = async e => {
+        e.preventDefault()
+        if (!validation()) return
+
+        setIsLoading(true)
+
+        const formData = new FormData(formRef.current)
+        formData.append('title', e.target.elements.title.value)
+
+        sections.forEach((section, index) => {
+            formData.append(`section_${index + 1}_section_heading`, section.section_heading)
+            formData.append(`section_${index + 1}_section`, section.section)
+            formData.append(`section_${index + 1}_image`, section.image)
+        })
+        formData.append('num_sections', sections.length)
+        console.log('formdata in react', formData)
+        let post = await dispatch(thunkCreatePost(formData))
+
+        if (post && post.id) {
+            history.push(`/${post.id}`)
+        }
+
+        setIsLoading(false)
+    }
 
     return (
         <div>
+            <form ref={formRef} onSubmit={handleSubmit} encType='multipart/form-data'>
+                <label htmlFor="title">Title</label>
+                <textarea id="title" name="title" required />
 
-            <button>Post Article</button>
+                {sections.map((section, index) => (
+                    <div key={index}>
+                        <label htmlFor={`section_${index + 1}_section_heading`}>
+                            Section Heading {index + 1}
+                        </label>
+                        <textarea
+                            id={`section_${index + 1}_section_heading`}
+                            name={`section_${index + 1}_section_heading`}
+                            type="text"
+                            value={section.section_heading}
+                            onChange={(e) =>
+                                handleSectionChange(index, "section_heading", e.target.value)
+                            }
+                        />
+                        <label htmlFor={`section_${index + 1}_section`}>
+                            Section Content {index + 1}
+                        </label>
+                        <textarea
+                            id={`section_${index + 1}_section`}
+                            name={`section_${index + 1}_section`}
+                            type="text"
+                            value={section.section}
+                            onChange={(e) =>
+                                handleSectionChange(index, "section", e.target.value)
+                            }
+                        />
+                        {validationErrors[`section_${index + 1}`] && (
+                            <span>{validationErrors[`section_${index + 1}`]}</span>
+                        )}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) =>
+                                handleImageChange(index, e.target.files[0])
+                            }
+                        />
+                        <button
+                            type="button"
+                            onClick={() => handleRemoveSection(index)}
+                        >
+                            Remove Section
+                        </button>
+                    </div>
+                ))}
+
+                <button type="button" onClick={handleAddSection}>
+                    Add Section
+                </button>
+                <button type="submit">Post Article</button>
+            </form>
         </div>
-    )
-}
+    );
+};
 
 export default CreatePost
