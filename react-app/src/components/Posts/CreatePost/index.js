@@ -126,7 +126,7 @@ const CreatePost = () => {
                 <button type="button" onClick={handleAddSection}>
                     Add Section
                 </button>
-                <button type="submit">Post Article</button>
+                <button type="submit">{isLoading ? "Posting" : "Post Article"}</button>
             </form>
         </div>
     );

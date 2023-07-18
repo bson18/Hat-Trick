@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min"
 import { thunkGetSinglePost } from "../../../store/post"
 import OpenModalButton from "../../OpenModalButton"
 import DeletePostModal from "../DeletePostModal"
+import PostComments from "../../Comments/PostComments"
 
 const PostDetails = () => {
     const { postId } = useParams()
@@ -39,6 +40,9 @@ const PostDetails = () => {
                         <p>{section.section}</p>
                     </div>
                 ))}</div>
+                <div>
+                    <PostComments post={post} />
+                </div>
             </div>
         </div>
     )

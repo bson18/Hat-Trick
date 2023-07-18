@@ -28,4 +28,24 @@ def update_comment(id):
         db.session.commit()
         return comment.to_dict()
     else:
-        return {"message": "Bad Request", "form_errors": form.errors}, 400
+        return {"message": "Bad Request"}, 400
+
+
+#Delete comment
+@comment_routes.route('/<int:id>/delete', methods = ['POST'])
+@login_required
+def delete_comment(id):
+    if not current_user.is_authenticated:
+        return {"message": "Authentication required"}, 401
+
+    comment = Comment.query.get(id)
+
+    if not comment:
+        return {"message": "Comment not found"}, 404
+
+    if comment.user_id != current_user.id:
+        return {"message": "Forbidden"}, 403
+
+    db.session.delete(comment)
+    db.session.commit()
+    return {"message": "Successfully Deleted"}
