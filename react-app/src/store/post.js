@@ -72,7 +72,40 @@ export const thunkGetSinglePost = postId => async dispatch => {
     }
 }
 
+//Create post
+export const thunkCreatePost = post => async dispatch => {
+    const res = await fetch('/api/posts/new', {
+        method: "POST",
+        body: post
+    })
 
+    if (res.ok) {
+        const data = await res.json()
+        console.log("data", data)
+        dispatch(actionCreatePost(data))
+        dispatch(actionGetAllPosts())
+        return data
+    }
+}
+
+//Update post
+export const thunkUpdatePost = (postId, post) => async dispatch => {
+    try {
+        const res = await fetch(`/api/posts/${postId}`, {
+            method: 'POST',
+            body: post
+        })
+
+        if (res.ok) {
+            const data = await res.json()
+            console.log("data", data)
+            dispatch(actionUpdatePost(data))
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 //Delete post
 export const thunkDeletePost = postId => async dispatch => {
@@ -98,18 +131,24 @@ export default function postsReducer(state = initialState, action) {
     let newState
     switch (action.type) {
         case GET_ALL_POSTS: {
-            return {
-                ...state,
-                allPosts: action.posts,
-            };
+            newState = { ...state, allPosts: action.posts }
+            return newState
         }
         case GET_SINGLE_POST: {
             newState = { ...state.allPosts, singlePost: {} }
             newState.singlePost = action.post
             return newState
         }
-
-
+        case CREATE_POST: {
+            newState = { ...state, allPosts: { ...state.allPosts } }
+            console.log("reducer", action.post.id)
+            newState.allPosts[action.post.id] = action.post
+            return newState
+        }
+        case UPDATE_POST: {
+            newState = { ...state, [action.post.id]: action.post }
+            return newState
+        }
         case DELETE_POST: {
             newState = { ...state, allPosts: { ...state.allPosts } }
             delete newState.allPosts[action.postId]
