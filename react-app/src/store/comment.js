@@ -14,7 +14,7 @@ export const actionGetPostComments = comments => {
 
 //Get comments
 export const thunkGetPostComments = postId => async dispatch => {
-    const res = await fetch(`/api/posts/${postId}`)
+    const res = await fetch(`/api/posts/${postId}/comments`)
 
     if (res.ok) {
         const data = await res.json()
@@ -34,7 +34,7 @@ export default function commentsReducer(state = initialState, action) {
     let newState
     switch (action.type) {
         case GET_POST_COMMENTS: {
-            newState = { ...state, allComments: action.reviews }
+            newState = { ...state, allComments: action.comments }
             return newState
         }
 

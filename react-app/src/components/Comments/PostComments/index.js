@@ -11,12 +11,19 @@ const PostComments = ({ post }) => {
         dispatch(thunkGetPostComments(post.id))
     }, [dispatch, post.id])
 
-    if (!comments) return null
-    console.log(comments)
+    if (!comments || comments.length === 0) return null
+    console.log("postcomments", comments)
 
 
     return (
-        null
+        <div>
+            {Object.values(comments).map(comment => (
+                <div key={comment.id}>
+                    <p>{comment.comment}</p>
+                    <p>Posted by: {comment.first_name} {comment.last_name}</p>
+                </div>
+            ))}
+        </div>
     )
 }
 
