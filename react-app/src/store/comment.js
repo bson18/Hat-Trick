@@ -1,5 +1,7 @@
 const GET_POST_COMMENTS = 'comments/GET_POST_COMMENTS'
 const CREATE_COMMENT = 'comments/CREATE_COMMENT'
+const UPDATE_COMMENT = 'comments/UPDATE_COMMENT'
+const DELETE_COMMENT = 'comments/DELETE_COMMENT'
 
 /*-----ACTIONS-----*/
 
@@ -16,6 +18,22 @@ export const actionCreateComment = comment => {
     return {
         type: CREATE_COMMENT,
         comment
+    }
+}
+
+//Update comment
+export const actionUpdateComment = comment => {
+    return {
+        type: UPDATE_COMMENT,
+        comment
+    }
+}
+
+//Delete comment
+export const actionDeleteComment = commentId => {
+    return {
+        type: DELETE_COMMENT,
+        commentId
     }
 }
 
@@ -49,6 +67,36 @@ export const thunkCreateComment = (comment, postId) => async dispatch => {
     }
 }
 
+//Update comment
+export const thunkUpdateComment = (commentId, comment) => async dispatch => {
+    const res = await fetch(`/api/comments/${commentId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(comment)
+    })
+
+    if (res.ok) {
+        const data = await res.json()
+        dispatch(actionUpdateComment(data))
+        return data
+    }
+}
+
+//Delete comment
+export const thunkDeleteComment = commentId => async dispatch => {
+    const res = await fetch(`/api/comments/${commentId}/delete`, {
+        method: 'POST'
+    })
+
+    const data = await res.json()
+    if (res.ok) {
+        dispatch(actionDeleteComment(commentId))
+    }
+    return data
+}
+
 
 /*-----REDUCER-----*/
 
@@ -65,6 +113,15 @@ export default function commentsReducer(state = initialState, action) {
         }
         case CREATE_COMMENT: {
             newState = { ...state, allComments: { ...state.allComments, [action.comment.id]: action.comment } }
+            return newState
+        }
+        case UPDATE_COMMENT: {
+            newState = { ...state, [action.comment.id]: action.comment }
+            return newState
+        }
+        case DELETE_COMMENT: {
+            newState = { ...state }
+            delete newState[action.commentId]
             return newState
         }
 
