@@ -39,10 +39,10 @@ export const actionUpdatePost = post => {
 }
 
 //Delete post
-export const actionDeletePost = post => {
+export const actionDeletePost = postId => {
     return {
         type: DELETE_POST,
-        post
+        postId
     }
 }
 
@@ -109,8 +109,8 @@ export const thunkUpdatePost = (postId, post) => async dispatch => {
 
 //Delete post
 export const thunkDeletePost = postId => async dispatch => {
-    const res = await fetch(`/api/posts/${postId}`, {
-        method: 'DELETE'
+    const res = await fetch(`/api/posts/${postId}/delete`, {
+        method: 'POST'
     })
     const data = await res.json()
     if (res.ok) {
@@ -150,8 +150,8 @@ export default function postsReducer(state = initialState, action) {
             return newState
         }
         case DELETE_POST: {
-            newState = { ...state, allPosts: { ...state.allPosts } }
-            delete newState.allPosts[action.postId]
+            newState = { ...state }
+            delete newState[action.postId]
             return newState
         }
         default:

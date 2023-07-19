@@ -170,7 +170,7 @@ def update_post(id):
 
 
 #Delete post
-@post_routes.route('/<int:id>', methods = ['DELETE'])
+@post_routes.route('/<int:id>/delete', methods = ['POST'])
 def delete_post(id):
     if not current_user.is_authenticated:
         return {"message": "Authentication required"}, 401

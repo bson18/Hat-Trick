@@ -15,7 +15,7 @@ class Post(db.Model):
 
     #relationships
     sections = db.relationship('Section', backref='post', cascade='all, delete-orphan')
-    comments = db.relationship('Comment', backref='post')
+    comments = db.relationship('Comment', backref='post', cascade='all, delete-orphan')
 
     def to_dict(self):
         return {
