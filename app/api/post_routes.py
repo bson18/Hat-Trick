@@ -65,7 +65,7 @@ def create_post():
                 except Exception as e:
                     return {"message": str(e)}, 500
         db.session.commit()
-        return {"post": post.to_dict()}
+        return post.to_dict()
     else:
         print("Form validation failed")
         form_errors = form.errors
@@ -88,19 +88,85 @@ def update_post(id):
     if not post.owner_id == current_user.id:
         return {"message": "Forbidden"}, 403
 
-    form = PostForm()
+    form = PostForm(request.form)
     form['csrf_token'].data = request.cookies['csrf_token']
 
     if form.validate_on_submit():
         post.title = form.data['title']
-        post.heading = form.data['heading']
-        post.post = form.data['post']
         post.updated_at = func.now()
+
+        for section in post.sections:
+            section_heading = request.form.get(f'section_{section.id}_section_heading')
+            section_content = request.form.get(f'section_{section.id}_section')
+            # image = request.files.get(f'section_{section.id}_image')
+
+            section.section_heading = section_heading
+            section.section = section_content
+            # if image:
+            #     try:
+            #         image.filename = get_unique_filename(image.filename)
+            #         upload = upload_file_to_s3(image)
+            #         image_url = upload['url']
+            #         section.image=image_url
+            #     except Exception as e:
+            #         return {"message": str(e)}, 500
+
+        # num_sections = int(request.form.get('num_sections', 0))
+
+        # existing_section_ids = set()
+        # for section in post.sections:
+        #     existing_section_ids.add(section.id)
+
+        # for i in range(1, num_sections + 1):
+        #     section_id = request.form.get(f'section_{i}_id')
+        #     section_heading = request.form.get(f'section_{i}_section_heading')
+        #     section_content = request.form.get(f'section_{i}_section')
+        #     image = request.files.get(f'section_{i}_image')
+
+        #     if section_id:
+        #         section = Section.query.get(section_id)
+
+        #         if section:
+        #             section.section_heading = section_heading
+        #             section.section = section_content
+        #             if image:
+        #                 try:
+        #                     image.filename = get_unique_filename(image.filename)
+        #                     upload = upload_file_to_s3(image)
+        #                     image_url = upload['url']
+        #                     section.image = image_url
+        #                 except Exception as e:
+        #                     return {"message": str(e)}, 500
+        #     else:
+        #         if section_heading and section_content and image:
+        #             try:
+        #                 image.filename = get_unique_filename(image.filename)
+        #                 upload = upload_file_to_s3(image)
+        #                 image_url = upload['url']
+
+        #                 section = Section(
+        #                     post_id=post.id,
+        #                     section_heading=section_heading,
+        #                     section=section_content,
+        #                     image=image_url,
+        #                     order=i
+        #                 )
+        #                 db.session.add(section)
+        #             except Exception as e:
+        #                 return {"message": str(e)}, 500
+        #     if section_id:
+        #         existing_section_ids.remove(section_id)
+
+        # for section_id in existing_section_ids:
+        #     section = Section.query.get(section_id)
+        #     db.session.delete(section)
 
         db.session.commit()
 
         return post.to_dict()
-    return {"message": "Bad Request"}, 400
+    else:
+        form_errors = form.errors
+        return {"message": "Bad Request", "form_errors": form_errors}, 400
 
 
 #Delete post

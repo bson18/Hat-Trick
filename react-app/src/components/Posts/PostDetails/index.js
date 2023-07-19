@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useParams } from "react-router-dom/cjs/react-router-dom.min"
+import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min"
 import { thunkGetSinglePost } from "../../../store/post"
 import OpenModalButton from "../../OpenModalButton"
 import DeletePostModal from "../DeletePostModal"
@@ -9,6 +9,7 @@ import PostComments from "../../Comments/PostComments"
 const PostDetails = () => {
     const { postId } = useParams()
     const dispatch = useDispatch()
+    const history = useHistory()
     const post = useSelector(state => state.posts.singlePost)
     const user = useSelector(state => state.session.user)
     const [isLoading, setIsLoading] = useState(true)
@@ -22,14 +23,19 @@ const PostDetails = () => {
 
     if (isLoading) return <div></div>
 
-    const showDelete = user && user.id === post.owner_id
+    const showButtons = user && user.id === post.owner_id
 
     return (
         post && <div>
             <div>
                 <h2>{post.title}</h2>
                 <p>{post.owner_first_name} {post.owner_last_name}</p>
-                {showDelete && (<OpenModalButton
+                {showButtons && <button
+                    onClick={e => {
+                        history.push(`/${post.id}/edit`)
+                    }}
+                >Edit Article</button>}
+                {showButtons && (<OpenModalButton
                     modalComponent={<DeletePostModal postId={post.id} />}
                     buttonText='Delete Article'
                 />)}

@@ -8,6 +8,7 @@ import Navigation from "./components/Navigation";
 import PostTiles from "./components/Posts/PostTiles"
 import CreatePost from "./components/Posts/CreatePost";
 import PostDetails from "./components/Posts/PostDetails";
+import UpdatePost from "./components/Posts/UpdatePost";
 
 function App() {
   const dispatch = useDispatch();
@@ -23,6 +24,9 @@ function App() {
         <Switch>
           <Route exact path='/'>
             <PostTiles />
+          </Route>
+          <Route exact path='/:postId/edit'>
+            <UpdatePost />
           </Route>
           <Route path='/new'>
             <CreatePost />
