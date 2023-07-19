@@ -17,7 +17,7 @@ const PostComments = ({ post }) => {
 
     return (
         <div>
-            {Object.values(comments).map(comment => (
+            {Object.values(comments).reverse().map(comment => (
                 <div key={comment.id}>
                     <p>{comment.comment}</p>
                     <p>Posted by: {comment.first_name} {comment.last_name}</p>

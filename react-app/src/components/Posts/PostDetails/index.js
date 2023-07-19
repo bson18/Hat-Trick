@@ -5,6 +5,7 @@ import { thunkGetSinglePost } from "../../../store/post"
 import OpenModalButton from "../../OpenModalButton"
 import DeletePostModal from "../DeletePostModal"
 import PostComments from "../../Comments/PostComments"
+import CreateComment from "../../Comments/CreateComment"
 
 const PostDetails = () => {
     const { postId } = useParams()
@@ -46,6 +47,9 @@ const PostDetails = () => {
                         <p>{section.section}</p>
                     </div>
                 ))}</div>
+                <div>
+                    <CreateComment post={post} />
+                </div>
                 <div>
                     <PostComments post={post} />
                 </div>
