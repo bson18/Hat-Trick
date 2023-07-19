@@ -8,6 +8,10 @@ Create Date: 2023-07-17 17:39:10.346824
 from alembic import op
 import sqlalchemy as sa
 
+import os
+environment = os.getenv("FLASK_ENV")
+SCHEMA = os.environ.get("SCHEMA")
+
 
 # revision identifiers, used by Alembic.
 revision = '8dcc61ada1e1'
@@ -29,6 +33,10 @@ def upgrade():
     sa.ForeignKeyConstraint(['post_id'], ['posts.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+
+    if environment == "production":
+        op.execute(f"ALTER TABLE sections SET SCHEMA {SCHEMA};")
+
     with op.batch_alter_table('post_images', schema=None) as batch_op:
         batch_op.alter_column('image',
                existing_type=sa.VARCHAR(),
