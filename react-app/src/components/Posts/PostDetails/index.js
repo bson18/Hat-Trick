@@ -6,6 +6,7 @@ import OpenModalButton from "../../OpenModalButton"
 import DeletePostModal from "../DeletePostModal"
 import PostComments from "../../Comments/PostComments"
 import CreateComment from "../../Comments/CreateComment"
+import "./PostDetails.css"
 
 const PostDetails = () => {
     const { postId } = useParams()
@@ -14,11 +15,32 @@ const PostDetails = () => {
     const post = useSelector(state => state.posts.singlePost)
     const user = useSelector(state => state.session.user)
     const [isLoading, setIsLoading] = useState(true)
+    const [userLocalTime, setUserLocalTime] = useState(null)
 
     useEffect(() => {
         dispatch(thunkGetSinglePost(postId))
             .then(() => setIsLoading(false))
     }, [dispatch, postId])
+
+    useEffect(() => {
+        if (post) {
+            const userTimeZone = new Date().getTimezoneOffset();
+            const postCreatedAt = new Date(post.created_at)
+            const userLocalDate = new Date(postCreatedAt.getTime() - userTimeZone * 60000)
+            setUserLocalTime(formatDate(userLocalDate))
+        }
+    })
+
+    const formatDate = (date) => {
+        const options = {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+        return date.toLocaleDateString(undefined, options)
+    }
 
     if (!post) return null
 
@@ -27,32 +49,35 @@ const PostDetails = () => {
     const showButtons = user && user.id === post.owner_id
 
     return (
-        post && <div>
+        post && <div className="post-container">
+            <h2>{post.title}</h2>
+            <div className="post-info">
+                <p className="info-left">{post.owner_first_name} {post.owner_last_name}</p>
+                <p className="info-right">{userLocalTime} <i class="fa-regular fa-comments"></i> {post.comments.length}</p>
+            </div>
+            {showButtons && <button
+                onClick={e => {
+                    history.push(`/${post.id}/edit`)
+                }}
+            >Edit Article</button>}
+            {showButtons && (<OpenModalButton
+                modalComponent={<DeletePostModal postId={post.id} />}
+                buttonText='Delete Article'
+            />)}
             <div>
-                <h2>{post.title}</h2>
-                <p>{post.owner_first_name} {post.owner_last_name}</p>
-                {showButtons && <button
-                    onClick={e => {
-                        history.push(`/${post.id}/edit`)
-                    }}
-                >Edit Article</button>}
-                {showButtons && (<OpenModalButton
-                    modalComponent={<DeletePostModal postId={post.id} />}
-                    buttonText='Delete Article'
-                />)}
-                <div>{post.sections.map(section => (
+                {post.sections.map(section => (
                     <div key={section.id}>
                         <img src={section.image} alt='' />
                         <p>{section.section_heading}</p>
                         <p>{section.section}</p>
                     </div>
-                ))}</div>
-                <div>
-                    <CreateComment post={post} />
-                </div>
-                <div>
-                    <PostComments post={post} />
-                </div>
+                ))}
+            </div>
+            <div>
+                <CreateComment post={post} />
+            </div>
+            <div>
+                <PostComments post={post} />
             </div>
         </div>
     )

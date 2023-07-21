@@ -26,5 +26,6 @@ class Post(db.Model):
             'updated_at': self.updated_at,
             "owner_first_name": self.owner.first_name,
             "owner_last_name": self.owner.last_name,
-            "sections": [section.to_dict() for section in self.sections]
+            "sections": [section.to_dict() for section in self.sections],
+            "comments": [comment.to_dict() for comment in self.comments]
         }

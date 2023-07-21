@@ -1,1 +1,11 @@
 /* TODO Add site wide styles */
+body {
+    background-color: #262526;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}

@@ -7,20 +7,34 @@ import './Navigation.css';
 function Navigation({ isLoaded }) {
 	const sessionUser = useSelector(state => state.session.user);
 
+	let sessionLinks;
+	if (sessionUser) {
+		sessionLinks = (
+			<div className="profile-menu">
+				<NavLink className='create-link' to='/new'>
+					<div id='create-post-link'>NEW ARTICLE</div>
+				</NavLink>
+				<div className="profile-btn">
+					<ProfileButton user={sessionUser} />
+				</div>
+			</div>
+		);
+	} else {
+		sessionLinks = (
+			<div className='profile-btn'>
+				<ProfileButton user={sessionUser} />
+			</div>
+		);
+	}
+
 	return (
-		<div>
-			<NavLink exact to='/new'>New Article</NavLink>
-			<ul>
-				<li>
-					<NavLink exact to="/">Home</NavLink>
-				</li>
-				{isLoaded && (
-					<li>
-						<ProfileButton user={sessionUser} />
-					</li>
-				)}
-			</ul>
-		</div>
+		<nav>
+			<div className="nav-container">
+				<NavLink exact to="/" id='logo'>Home</NavLink>
+				{isLoaded && sessionLinks}
+
+			</div>
+		</nav>
 	);
 }
 
