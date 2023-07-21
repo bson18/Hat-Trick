@@ -45,6 +45,7 @@ def create_post():
         num_sections = int(request.form.get('num_sections', 0))
 
         for i in range(1, num_sections + 1):
+            print("In section loop")
             section_heading = request.form.get(f'section_{i}_section_heading')
             section_content = request.form.get(f'section_{i}_section')
             image = request.files.get(f'section_{i}_image')
