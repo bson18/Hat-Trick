@@ -52,8 +52,11 @@ def create_post():
             if section_heading and section_content and image:
                 print("In image upload block")
                 try:
+                    print("In try block")
                     image.filename = get_unique_filename(image.filename)
+                    print("after get unique filename")
                     upload = upload_file_to_s3(image)
+                    print("after upload to s3")
                     image_url = upload['url']
                     print("after upload")
                     print(image_url)
