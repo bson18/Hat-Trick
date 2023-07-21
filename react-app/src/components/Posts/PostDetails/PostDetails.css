@@ -1,0 +1,16 @@
+.post-container {
+    margin: auto 20%;
+}
+
+.post-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.info-right {
+    margin-right: 5px;
+}
+
+img {
+    width: 100%;
+}
