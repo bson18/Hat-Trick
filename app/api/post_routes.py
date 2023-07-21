@@ -50,11 +50,13 @@ def create_post():
             section_content = request.form.get(f'section_{i}_section')
             image = request.files.get(f'section_{i}_image')
             if section_heading and section_content and image:
+                print("In image upload block")
                 try:
                     image.filename = get_unique_filename(image.filename)
                     upload = upload_file_to_s3(image)
                     image_url = upload['url']
-
+                    print("after upload")
+                    print(image_url)
                     section = Section(
                         post_id = post.id,
                         section_heading = section_heading,
@@ -62,6 +64,8 @@ def create_post():
                         image = image_url,
                         order=i
                     )
+                    print("section created")
+                    print(section)
                     db.session.add(section)
                 except Exception as e:
                     return {"message": str(e)}, 500
