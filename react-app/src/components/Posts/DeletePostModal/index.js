@@ -17,11 +17,11 @@ const DeletePostModal = ({ postId }) => {
 
     return (
         <div className="confirm-modal">
-            <h2 className="delete-head">Confirm Delete</h2>
+            <h2 className="delete-head">CONFIRM DELETE</h2>
             <p>Are you sure you want to delete this article?</p>
             <div className="button-container">
-                <button className="confirm-button" onClick={onClick}>Yes (Delete Article)</button>
-                <button className="reject-button" onClick={closeModal}>No (Keep Article)</button>
+                <button className="confirm-button" onClick={onClick}>YES (Delete Article)</button>
+                <button className="reject-button" onClick={closeModal}>NO (Keep Article)</button>
             </div>
         </div>
     )

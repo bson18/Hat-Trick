@@ -2,6 +2,7 @@ import { useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min"
 import { thunkCreatePost } from "../../../store/post"
+import "./CreatePost.css"
 
 const CreatePost = () => {
     const dispatch = useDispatch()
@@ -78,19 +79,23 @@ const CreatePost = () => {
 
     return (
         <div>
-            <form ref={formRef} onSubmit={handleSubmit} encType='multipart/form-data'>
+            <form className="post-form" ref={formRef} onSubmit={handleSubmit} encType='multipart/form-data'>
                 <label htmlFor="title">Title</label>
                 <textarea id="title" name="title" required />
-
+                <h3 className="create-h3">Click the Add Section button to add more sections to your post</h3>
+                <h4 className="middle-h4">Each section requires:</h4>
+                <h4 className="create-h4">a heading setence, content paragraph, and a related image</h4>
                 {sections.map((section, index) => (
-                    <div key={index}>
+                    <div className="section-form" key={index}>
                         <label htmlFor={`section_${index + 1}_section_heading`}>
                             Section Heading {index + 1}
                         </label>
                         <textarea
+                            className="section-heading"
                             id={`section_${index + 1}_section_heading`}
                             name={`section_${index + 1}_section_heading`}
                             type="text"
+                            required
                             value={section.section_heading}
                             onChange={(e) =>
                                 handleSectionChange(index, "section_heading", e.target.value)
@@ -100,9 +105,11 @@ const CreatePost = () => {
                             Section Content {index + 1}
                         </label>
                         <textarea
+                            className="section-content"
                             id={`section_${index + 1}_section`}
                             name={`section_${index + 1}_section`}
                             type="text"
+                            required
                             value={section.section}
                             onChange={(e) =>
                                 handleSectionChange(index, "section", e.target.value)
@@ -112,25 +119,28 @@ const CreatePost = () => {
                             <span>{validationErrors[`section_${index + 1}`]}</span>
                         )}
                         <input
+                            className="image-upload"
                             type="file"
+                            required
                             accept="image/*"
                             onChange={(e) =>
                                 handleImageChange(index, e.target.files[0])
                             }
                         />
                         <button
+                            className="remove-btn"
                             type="button"
                             onClick={() => handleRemoveSection(index)}
                         >
-                            Remove Section
+                            REMOVE SECTION
                         </button>
                     </div>
                 ))}
 
-                <button type="button" onClick={handleAddSection}>
-                    Add Section
+                <button className="add-btn" type="button" onClick={handleAddSection}>
+                    ADD SECTION
                 </button>
-                <button type="submit">{isLoading ? "Posting" : "Post Article"}</button>
+                <button className="submit-post-btn" type="submit">{isLoading ? "POSTING" : "POST ARTICLE"}</button>
             </form>
         </div>
     );
