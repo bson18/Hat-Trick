@@ -1,11 +1,13 @@
 import { useRef, useState } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min"
 import { thunkCreatePost } from "../../../store/post"
 
 const CreatePost = () => {
     const dispatch = useDispatch()
     const history = useHistory()
+    const user = useSelector(state => state.session.user)
+    if (!user) history.push('/')
 
     const [sections, setSections] = useState([])
     const [validationErrors, setValidationErrors] = useState({})

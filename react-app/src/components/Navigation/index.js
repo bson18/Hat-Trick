@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import './Navigation.css';
+import hattricklogo from '../../assets/hattricklogo.png'
 
 function Navigation({ isLoaded }) {
 	const sessionUser = useSelector(state => state.session.user);
@@ -30,7 +31,9 @@ function Navigation({ isLoaded }) {
 	return (
 		<nav>
 			<div className="nav-container">
-				<NavLink exact to="/" id='logo'>Home</NavLink>
+				<NavLink exact to="/">
+					<img src={hattricklogo} id='logo' />
+				</NavLink>
 				{isLoaded && sessionLinks}
 
 			</div>

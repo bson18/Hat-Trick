@@ -13,7 +13,7 @@
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  padding: 1rem;
+  padding: 9px;
   border-bottom: 4px solid #f0705a;
   position: relative;
   background-color: #000;
@@ -41,4 +41,16 @@ li {
 
 a {
   text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+#logo {
+  height: 2rem;
+  width: auto;
+}
+
+.prof-btn {
+  border-radius: 50%;
+  padding: 8px;
 }
