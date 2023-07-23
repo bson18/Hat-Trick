@@ -24,6 +24,7 @@ def get_single_post(id):
 
 #Create new post
 @post_routes.route('/new', methods = ['POST'])
+@login_required
 def create_post():
     if not current_user.is_authenticated:
         return {"message": "Authentication required"}, 401

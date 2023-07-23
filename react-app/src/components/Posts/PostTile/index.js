@@ -1,5 +1,5 @@
 import { useHistory } from "react-router-dom"
-const PostTile = ({ post, isFirstTile }) => {
+const PostTile = ({ post }) => {
     const history = useHistory()
 
     const onClick = () => {
@@ -28,37 +28,39 @@ const PostTile = ({ post, isFirstTile }) => {
 
     const firstSectionHeading = post.sections.length > 0 ? post.sections[0].section_heading : "";
 
-    if (isFirstTile) {
-        return (
-            <div>
-                <div className="first-tile" onClick={onClick}>
-                    <div className="post-details">
-                        <div className="post-title">{post.title}</div>
-                        <div className="post-heading">{firstSectionHeading}</div>
-                        <div className="post-time-comments">
-                            <p><span><i className="fa-regular fa-clock"></i> {timeSinceCreated()} </span>
-                                {commentCount > 0 && (
-                                    <span> <i class="fa-regular fa-comments"></i> {commentCount}</span>
-                                )}
-                            </p>
-                        </div>
-                    </div>
-                    <img src={post.sections[0].image} className="first-image" alt='first section image' />
-                </div>
-                <hr id='home-bar' />
-            </div>
-        )
-    }
+    // if (isFirstTile) {
+    //     return (
+    //         <div>
+    //             <div className="first-tile" onClick={onClick}>
+    //                 <div className="post-details">
+    //                     <div className="post-title">{post.title}</div>
+    //                     <div className="post-heading">{firstSectionHeading}</div>
+    //                     <div className="post-time-comments">
+    //                         <p><span><i className="fa-regular fa-clock"></i> {timeSinceCreated()} </span>
+    //                             {commentCount > 0 && (
+    //                                 <span> <i class="fa-regular fa-comments"></i> {commentCount}</span>
+    //                             )}
+    //                         </p>
+    //                     </div>
+    //                 </div>
+    //                 <img src={post.sections[0].image} className="first-image" alt='first section image' />
+    //             </div>
+    //             <hr id='home-bar' />
+    //         </div>
+    //     )
+    // }
 
     return (
         <div className="post">
-            <div className="post-tile" onClick={onClick}>
-                <div className="image-container">
+            <div className="post-tile">
+                <div className="image-container" onClick={onClick}>
                     <img src={post.sections[0].image} className="image" alt='first section image' />
                 </div>
-                <div>{post.title}</div>
-                <div>{firstSectionHeading}</div>
-                <div>
+                <div className="info-container">
+                    <div className="info-title" onClick={onClick}>{post.title}</div>
+                    {/* <div>{firstSectionHeading}</div> */}
+                </div>
+                <div className="date-comments-container">
                     <p><span><i className="fa-regular fa-clock"></i> {timeSinceCreated()} </span>
                         {commentCount > 0 && (
                             <span> <i class="fa-regular fa-comments"></i> {commentCount}</span>

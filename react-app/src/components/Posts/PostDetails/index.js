@@ -52,24 +52,25 @@ const PostDetails = () => {
         post && <div className="post-container">
             <h2>{post.title}</h2>
             <div className="post-info">
-                <p className="info-left">{post.owner_first_name} {post.owner_last_name}</p>
+                <p className="info-left">{post.owner_first_name} {post.owner_last_name} {" "}
+                    {showButtons && <button
+                        onClick={e => {
+                            history.push(`/${post.id}/edit`)
+                        }}
+                    >Edit Article</button>} {" "}
+                    {showButtons && (<OpenModalButton
+                        modalComponent={<DeletePostModal postId={post.id} />}
+                        buttonText='Delete Article'
+                    />)}
+                </p>
                 <p className="info-right">{userLocalTime} <i class="fa-regular fa-comments"></i> {post.comments.length}</p>
             </div>
-            {showButtons && <button
-                onClick={e => {
-                    history.push(`/${post.id}/edit`)
-                }}
-            >Edit Article</button>}
-            {showButtons && (<OpenModalButton
-                modalComponent={<DeletePostModal postId={post.id} />}
-                buttonText='Delete Article'
-            />)}
             <div>
                 {post.sections.map(section => (
-                    <div key={section.id}>
+                    <div key={section.id} className="post-sections">
                         <img src={section.image} alt='' />
-                        <p>{section.section_heading}</p>
-                        <p>{section.section}</p>
+                        <p className="section-text-head"><h3>{section.section_heading}</h3></p>
+                        <p className="section-text">{section.section}</p>
                     </div>
                 ))}
             </div>
