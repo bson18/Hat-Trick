@@ -57,10 +57,10 @@ const PostDetails = () => {
                         onClick={e => {
                             history.push(`/${post.id}/edit`)
                         }}
-                    >Edit Article</button>} {" "}
+                    >EDIT ARTICLE</button>} {" "}
                     {showButtons && (<OpenModalButton
                         modalComponent={<DeletePostModal postId={post.id} />}
-                        buttonText='Delete Article'
+                        buttonText='DELETE ARTICLE'
                     />)}
                 </p>
                 <p className="info-right">{userLocalTime} <i class="fa-regular fa-comments"></i> {post.comments.length}</p>

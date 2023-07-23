@@ -4,6 +4,7 @@ import { thunkGetPostComments } from "../../../store/comment"
 import OpenModalButton from "../../OpenModalButton"
 import UpdateComment from "../UpdateComment"
 import DeleteComment from "../DeleteComment"
+import './PostComments.css'
 
 const PostComments = ({ post }) => {
     const dispatch = useDispatch()
@@ -19,7 +20,7 @@ const PostComments = ({ post }) => {
 
 
     return (
-        <div>
+        <div className="comments-container">
             {Object.values(comments).reverse().map(comment => (
                 <div key={comment.id}>
                     <p>{comment.comment}</p>
@@ -28,11 +29,15 @@ const PostComments = ({ post }) => {
                         <div>
                             <OpenModalButton
                                 modalComponent={<UpdateComment comment={comment} />}
-                                buttonText="Edit"
+                                buttonText="EDIT"
+                            /> {" "}
+                            <OpenModalButton
+                                modalComponent={<DeleteComment commentId={comment.id} />}
+                                buttonText="DELETE"
                             />
-                            <div><DeleteComment commentId={comment.id} /></div>
                         </div>
                     )}
+                    <hr />
                 </div>
             ))}
         </div>

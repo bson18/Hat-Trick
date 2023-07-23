@@ -1,0 +1,57 @@
+.post-form {
+    margin: auto 20%;
+    background-color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+}
+
+#title {
+    width: 550px;
+    height: 50px;
+    margin-bottom: 1rem;
+}
+
+.section-form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+}
+
+.section-heading {
+    width: 550px;
+    height: 75px;
+    margin-bottom: 10px;
+}
+
+.section-content {
+    width: 550px;
+    height: 150px;
+    margin-bottom: 10px;
+}
+
+.image-upload {
+    margin-bottom: 10px;
+}
+
+.create-h3, .create-h4 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.middle-h4 {
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.add-btn, .submit-post-btn {
+    width: 556px;
+}
+
+.remove-btn {
+    background-color: red;
+    margin-bottom: 10px;
+}

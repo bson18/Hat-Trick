@@ -1,0 +1,7 @@
+.cancel-btn {
+    margin-bottom: 1rem;
+}
+
+.update-btn, .cancel-btn {
+    width: 556px;
+}

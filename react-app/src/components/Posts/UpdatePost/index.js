@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min"
 import { thunkUpdatePost } from "../../../store/post"
+import './UpdatePost.css'
 
 const UpdatePost = () => {
     const { postId } = useParams()
@@ -80,7 +81,8 @@ const UpdatePost = () => {
 
     return (
         <div>
-            <form ref={formRef} onSubmit={handleSubmit} encType="multipart/form-data">
+            <form className="post-form" ref={formRef} onSubmit={handleSubmit} encType="multipart/form-data">
+                <h3>Update your title, heading, and content</h3>
                 <label htmlFor="title">Title</label>
                 <textarea id="title" name="title" defaultValue={title} required />
 
@@ -88,6 +90,7 @@ const UpdatePost = () => {
                     <div key={index}>
                         <label htmlFor={`section_${index + 1}_section_heading`}>Section Heading {index + 1}</label>
                         <textarea
+                            className="section-heading"
                             id={`section_${index + 1}_section_heading`}
                             name={`section_${index + 1}_section_heading`}
                             type="text"
@@ -98,6 +101,7 @@ const UpdatePost = () => {
 
                         <label htmlFor={`section_${index + 1}_section`}>Section Content {index + 1}</label>
                         <textarea
+                            className="section-content"
                             id={`section_${index + 1}_section`}
                             name={`section_${index + 1}_section`}
                             type="text"
@@ -112,7 +116,8 @@ const UpdatePost = () => {
                     </div>
                 ))}
 
-                <button type="submit">{isLoading ? "Updating" : "Update Post"}</button>
+                <button className="update-btn" type="submit">{isLoading ? "UPDATING" : "UPDATE POST"}</button>
+                <button className="cancel-btn" onClick={() => history.push(`/${postId}`)}>CANCEL</button>
             </form>
         </div>
     );

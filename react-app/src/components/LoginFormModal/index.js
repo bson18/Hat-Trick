@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { login } from "../../store/session";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
+import logo from '../../assets/hattricklogo.png'
 import "./LoginForm.css";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 function LoginFormModal() {
   const dispatch = useDispatch();
@@ -29,15 +29,16 @@ function LoginFormModal() {
 
   return (
     <>
-      <h1>Log In</h1>
+      <img src={logo} className="form-logo" />
+      <h1>LOG IN</h1>
+      <ul>
+        {errors.map((error, idx) => (
+          <li key={idx}>{error}</li>
+        ))}
+      </ul>
       <form onSubmit={handleSubmit}>
-        <ul>
-          {errors.map((error, idx) => (
-            <li key={idx}>{error}</li>
-          ))}
-        </ul>
         <label>
-          Email
+          EMAIL
           <input
             type="text"
             value={email}
@@ -46,7 +47,7 @@ function LoginFormModal() {
           />
         </label>
         <label>
-          Password
+          PASSWORD
           <input
             type="password"
             value={password}
@@ -54,8 +55,8 @@ function LoginFormModal() {
             required
           />
         </label>
-        <button type="submit">Log In</button>
-        <button id="demo" className="demo-button" onClick={demoLogin}>Demo User</button>
+        <button className="login-form-btn" type="submit">LOG IN</button>
+        <button id="demo" className="demo-button" onClick={demoLogin}>DEMO USER</button>
       </form>
     </>
   );

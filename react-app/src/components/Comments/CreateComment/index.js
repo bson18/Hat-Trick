@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { thunkCreateComment, thunkGetPostComments } from "../../../store/comment"
 import { thunkGetSinglePost } from "../../../store/post"
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min"
+import './CreateComment.css'
 
 const CreateComment = ({ post }) => {
     const dispatch = useDispatch()
@@ -43,16 +43,17 @@ const CreateComment = ({ post }) => {
     if (user) {
         return (
             <div>
-                <form onSubmit={onSubmit}>
+                <form className="comment-form" onSubmit={onSubmit}>
                     <textarea
+                        className="comment-textarea"
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
                         placeholder="Join the discussion..."
                     />
-                    {validationErrors.comment && hasSubmitted && (
-                        <p>{validationErrors.comment}</p>
+
+                    <button type="submit">SUBMIT</button> {validationErrors.comment && hasSubmitted && (
+                        <span>{validationErrors.comment}</span>
                     )}
-                    <button type="submit">Submit</button>
                 </form>
             </div>
         )

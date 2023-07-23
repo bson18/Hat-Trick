@@ -1,0 +1,13 @@
+.update-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.update-text {
+    width: 550px;
+    margin-bottom: 10px;
+}
+
+.update-btn {
+    margin-bottom: 0;
+}
