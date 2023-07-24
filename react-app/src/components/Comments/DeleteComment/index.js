@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { thunkDeleteComment, thunkGetPostComments } from "../../../store/comment"
 import { useModal } from "../../../context/Modal"
+import { thunkGetSinglePost } from "../../../store/post"
 
 const DeleteComment = ({ commentId }) => {
     const dispatch = useDispatch()
@@ -12,6 +13,7 @@ const DeleteComment = ({ commentId }) => {
 
         if (deleted) {
             dispatch(thunkGetPostComments(post.id))
+            dispatch(thunkGetSinglePost(post.id))
                 .then(closeModal)
         }
     }
