@@ -5,22 +5,34 @@ from app.models import db, Post, environment, SCHEMA
 def seed_posts():
     post1 = Post(
         owner_id=1,
-        title = "Test Article Title",
+        title = "Leonardo was right about Kylian Mbappe: PSG created a monster they simply have to sell",
     )
 
     post2 = Post(
         owner_id=2,
-        title="Six Liverpool players with plenty to prove in pre-season",
+        title="Wayne Rooney gives his verdict on Declan Rice's £105m transfer after Arsenal hammer his MLS All Stars side",
     )
 
     post3 = Post(
         owner_id=3,
-        title="Al-Hilal have pulled off the Saudi Pro League signing of the year with €40m Milinkovic-Savic",
+        title="Mason Greenwood: State of play for Man Utd forward amid ongoing internal investigation",
+    )
+
+    post4 = Post(
+        owner_id=2,
+        title="Vinicius Jr wants Real Madrid job previously held by Cristiano Ronaldo, Sergio Ramos & Karim Benzema",
+    )
+
+    post5 = Post(
+        owner_id=1,
+        title="Lionel Messi magic lights up Miami! Six things we learned as World Cup winner buries late free-kick to spark wild scenes on Inter Miami debut",
     )
 
     db.session.add(post1)
     db.session.add(post2)
     db.session.add(post3)
+    db.session.add(post4)
+    db.session.add(post5)
     db.session.commit()
 
 
