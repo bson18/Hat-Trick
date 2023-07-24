@@ -68,9 +68,9 @@ const UpdatePost = () => {
             //     formData.append(`section_${index + 1}_image`, section.imageFile);
             // }
         });
-        for (const pair of formData.entries()) {
-            console.log(`${pair[0]}, ${pair[1]}`);
-        }
+        // for (const pair of formData.entries()) {
+        //     console.log(`${pair[0]}, ${pair[1]}`);
+        // }
 
         await dispatch(thunkUpdatePost(postId, formData));
         history.push(`/${postId}`);
