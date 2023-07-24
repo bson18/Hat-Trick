@@ -26,7 +26,7 @@ const PostTile = ({ post }) => {
 
     const commentCount = post.comments ? post.comments.length : 0
 
-    const firstSectionHeading = post.sections.length > 0 ? post.sections[0].section_heading : "";
+    // const firstSectionHeading = post.sections.length > 0 ? post.sections[0].section_heading : "";
 
     // if (isFirstTile) {
     //     return (

@@ -2,13 +2,13 @@ import { useState, useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { thunkGetPostComments, thunkUpdateComment } from "../../../store/comment"
 import { useModal } from "../../../context/Modal"
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min"
+// import { useHistory } from "react-router-dom/cjs/react-router-dom.min"
 import './UpdateComment.css'
 
 const UpdateComment = ({ comment }) => {
     const dispatch = useDispatch()
     const { closeModal } = useModal()
-    const history = useHistory()
+    // const history = useHistory()
 
     const [updatedComment, setUpdatedComment] = useState(comment.comment)
     const [validationErrors, setValidationErrors] = useState({})

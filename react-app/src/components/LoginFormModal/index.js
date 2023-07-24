@@ -29,7 +29,7 @@ function LoginFormModal() {
 
   return (
     <>
-      <img src={logo} className="form-logo" />
+      <img src={logo} className="form-logo" alt="logo" />
       <h1>LOG IN</h1>
       <ul>
         {errors.map((error, idx) => (
