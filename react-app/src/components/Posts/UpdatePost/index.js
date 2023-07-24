@@ -12,7 +12,7 @@ const UpdatePost = () => {
 
     const [title, setTitle] = useState('')
     const [sections, setSections] = useState([])
-    const [validationErrors, setValidationErrors] = useState({})
+    // const [validationErrors, setValidationErrors] = useState({})
     const [isLoading, setIsLoading] = useState(false)
 
     const formRef = useRef(null)

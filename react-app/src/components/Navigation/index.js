@@ -32,7 +32,7 @@ function Navigation({ isLoaded }) {
 		<nav>
 			<div className="nav-container">
 				<NavLink exact to="/">
-					<img src={hattricklogo} id='logo' />
+					<img src={hattricklogo} id='logo' alt='logo' />
 				</NavLink>
 				{isLoaded && sessionLinks}
 

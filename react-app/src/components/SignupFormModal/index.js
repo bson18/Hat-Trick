@@ -53,7 +53,7 @@ function SignupFormModal() {
 
 	return (
 		<>
-			<img src={logo} className="form-logo" />
+			<img src={logo} className="form-logo" alt="logo" />
 			<h1>CREATE YOUR HAT-TRICK ACCOUNT</h1>
 			<ul>
 				{errors.map((error, idx) => (
