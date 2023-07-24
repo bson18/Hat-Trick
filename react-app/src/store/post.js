@@ -81,7 +81,7 @@ export const thunkCreatePost = post => async dispatch => {
 
     if (res.ok) {
         const data = await res.json()
-        console.log("data", data)
+        // console.log("data", data)
         dispatch(actionCreatePost(data))
         dispatch(actionGetAllPosts())
         return data
@@ -98,12 +98,12 @@ export const thunkUpdatePost = (postId, post) => async dispatch => {
 
         if (res.ok) {
             const data = await res.json()
-            console.log("data", data)
+            // console.log("data", data)
             dispatch(actionUpdatePost(data))
             return data
         }
     } catch (error) {
-        console.log(error)
+        // console.log(error)
     }
 }
 
@@ -141,7 +141,7 @@ export default function postsReducer(state = initialState, action) {
         }
         case CREATE_POST: {
             newState = { ...state, allPosts: { ...state.allPosts } }
-            console.log("reducer", action.post.id)
+            // console.log("reducer", action.post.id)
             newState.allPosts[action.post.id] = action.post
             return newState
         }

@@ -16,7 +16,7 @@ const PostComments = ({ post }) => {
     }, [dispatch, post.id])
 
     if (!comments || comments.length === 0) return null
-    console.log("postcomments", comments)
+    // console.log("postcomments", comments)
 
 
     return (

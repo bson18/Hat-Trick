@@ -17,7 +17,7 @@ const PostTiles = () => {
     if (!posts) return null
 
     const firstPost = Object.values(posts).reverse()[0]
-    console.log(firstPost)
+    // console.log(firstPost)
 
     if (!firstPost) return null
 
