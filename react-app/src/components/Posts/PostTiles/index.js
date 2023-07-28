@@ -64,7 +64,7 @@ const PostTiles = () => {
                             </p>
                         </div>
                     </div>
-                    <img src={firstPost.sections[0].image} className="first-image" alt='first section image' onClick={onClick} />
+                    {firstPost.sections[0] && firstPost.sections[0].image && <img src={firstPost.sections[0].image} className="first-image" alt='first section image' onClick={onClick} />}
                 </div>
                 <hr id='home-bar' />
             </div>
