@@ -52,7 +52,10 @@ const CreatePost = () => {
 
     const handleSubmit = async e => {
         e.preventDefault()
-        if (!validation()) return
+        if (!validation() || sections.length === 0) {
+            if (sections.length === 0) setValidationErrors(prevErrors => ({ ...prevErrors, sectionsError: 'Must have at least one section' }))
+            return
+        }
 
         setIsLoading(true)
 
@@ -85,6 +88,7 @@ const CreatePost = () => {
                 <h3 className="create-h3">Click the Add Section button to add more sections to your post</h3>
                 <h4 className="middle-h4">Each section requires:</h4>
                 <h4 className="create-h4">a heading setence, content paragraph, and a related image</h4>
+                {validationErrors.sectionsError && (<span>{validationErrors.sectionsError}</span>)}
                 {sections.map((section, index) => (
                     <div className="section-form" key={index}>
                         <label htmlFor={`section_${index + 1}_section_heading`}>
