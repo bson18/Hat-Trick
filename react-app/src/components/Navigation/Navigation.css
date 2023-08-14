@@ -13,7 +13,7 @@
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  padding: 9px;
+  /* padding: 9px; */
   border-bottom: 4px solid #f0705a;
   position: relative;
   background-color: #000;
@@ -46,7 +46,7 @@ a {
 }
 
 #logo {
-  height: 2rem;
+  height: 3rem;
   width: auto;
 }
 
