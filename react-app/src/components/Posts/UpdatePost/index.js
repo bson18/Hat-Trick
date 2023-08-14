@@ -77,7 +77,7 @@ const UpdatePost = () => {
         setIsLoading(false)
     }
 
-    if (!post) return null
+    if (!post.id) return null
 
     return (
         <div>

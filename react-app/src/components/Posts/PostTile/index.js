@@ -54,14 +54,14 @@ const PostTile = ({ post }) => {
         <div className="post">
             <div className="post-tile">
                 <div className="image-container" onClick={onClick}>
-                    <img src={post.sections[0].image} className="image" alt='first section image' />
+                    <img src={post.sections[0].image} className="image" alt='first section' />
                 </div>
                 <div className="info-container">
                     <div className="info-title" onClick={onClick}>{post.title}</div>
                     {/* <div>{firstSectionHeading}</div> */}
                 </div>
                 <div className="date-comments-container">
-                    <p><span><i className="fa-regular fa-clock"></i> {timeSinceCreated()} </span>
+                    <p id="date-comments"><span><i className="fa-regular fa-clock"></i> {timeSinceCreated()} </span>
                         {commentCount > 0 && (
                             <span> <i class="fa-regular fa-comments"></i> {commentCount}</span>
                         )}
