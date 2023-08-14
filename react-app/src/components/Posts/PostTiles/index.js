@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { thunkGetAllPosts } from "../../../store/post"
 import PostTile from "./../PostTile"
 import "./PostTiles.css"
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min"
+import { useHistory, Link } from "react-router-dom/cjs/react-router-dom.min"
 
 const PostTiles = () => {
     const dispatch = useDispatch()
@@ -64,9 +64,16 @@ const PostTiles = () => {
                             </p>
                         </div>
                     </div>
-                    {firstPost.sections[0] && firstPost.sections[0].image && <img src={firstPost.sections[0].image} className="first-image" alt='first section image' onClick={onClick} />}
+                    {firstPost.sections[0] && firstPost.sections[0].image && <img src={firstPost.sections[0].image} className="first-image" alt='first section' onClick={onClick} />}
                 </div>
-                <hr id='home-bar' />
+                <div id='home-bar'>
+                    <div className="home-bar-title">
+                        Meet the Developer |
+                        <Link to={{ pathname: "https://www.linkedin.com/in/bson18/" }} target="_blank"><span><i class="fa-brands fa-linkedin" style={{ color: "white" }}></i></span></Link>
+                        <Link to={{ pathname: "https://github.com/bson18" }} target="_blank"><i class="fa-brands fa-github" style={{ color: "white" }}></i></Link>
+                    </div>
+
+                </div>
             </div>
             <div className="small-tiles">
                 {posts && Object.values(posts).slice(0, -1).reverse().map((post) => (
